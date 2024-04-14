@@ -281,7 +281,23 @@
                 <div class="card chat-app">
                     <div class="chat">
                         <div class="chat-header clearfix">
-                            <!-- Header content -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
+                                        <img src="assets/img/thalamus.webp" alt="avatar">
+                                    </a>
+                                    <div class="chat-about">
+                                        <h6 class="m-b-0">Thalamus AI</h6>
+                                        <small>Last query info</small>
+                                    </div>
+                                </div>
+                                <div class="col-lg-6 hidden-sm text-right">
+                                    <a href="/" class="btn btn-outline-secondary"><i
+                                            class="fa fa-home"></i></a>
+                                    <a href="javascript:void(0);" class="btn btn-outline-warning"><i
+                                            class="fa fa-question"></i></a>
+                                </div>
+                            </div>
                         </div>
                         <div class="chat-history">
                             <ul class="m-b-0" id="message-list">
@@ -351,7 +367,7 @@
                 headers: {
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify({ prompt: message })
+                body: JSON.stringify({ prompt: messages })
             }).then(response => response.text())
                 .then(text => {
                     // Append server's response to chat history
