@@ -281,101 +281,87 @@
                 <div class="card chat-app">
                     <div class="chat">
                         <div class="chat-header clearfix">
-                            <div class="row">
-                                <div class="col-lg-6">
-                                    <a href="javascript:void(0);" data-toggle="modal" data-target="#view_info">
-                                        <img src="assets/img/thalamus.webp" alt="avatar">
-                                    </a>
-                                    <div class="chat-about">
-                                        <h6 class="m-b-0">Thalamus AI</h6>
-                                        <small>Last query info</small>
-                                    </div>
-                                </div>
-                                <div class="col-lg-6 hidden-sm text-right">
-                                    <a href="/" class="btn btn-outline-secondary"><i class="fa fa-home"></i></a>
-                                    <a href="javascript:void(0);" class="btn btn-outline-warning"><i
-                                            class="fa fa-question"></i></a>
-                                </div>
-                            </div>
-                            <div class="chat-history">
-                                <ul class="m-b-0" id="message-list">
-                                    <li class="clearfix">
-                                        <!-- Initial static message -->
-                                        <div class="message left-message">Hello! How can I assist you?</div>
-                                    </li>
-                                </ul>
-                            </div>
-                            <form id="chat-form">
-                                <div class="chat-message clearfix">
-                                    <div class="input-group mb-0">
-                                        <input type="text" class="form-control" name="message"
-                                            placeholder="Enter text here..." id="chat-input">
-                                        <div class="input-group-prepend">
-                                            <button type="submit" class="input-group-text btn btn-default">
-                                                <i class="fa fa-send"></i>
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
+                            <!-- Header content -->
                         </div>
+                        <div class="chat-history">
+                            <ul class="m-b-0" id="message-list">
+                                <li class="clearfix">
+                                    <!-- Initial static message -->
+                                    <div class="message left-message">Hello! How can I assist you?</div>
+                                </li>
+                            </ul>
+                        </div>
+                        <form id="chat-form">
+                            <div class="chat-message clearfix">
+                                <div class="input-group mb-0">
+                                    <input type="text" class="form-control" name="message"
+                                        placeholder="Enter text here..." id="chat-input">
+                                    <div class="input-group-prepend">
+                                        <button type="submit" class="input-group-text btn btn-default">
+                                            <i class="fa fa-send"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
 
-        <script>
-            document.getElementById('chat-form').addEventListener('submit', function (event) {
-                event.preventDefault(); // Prevent the default form submission
+    <script>
+        document.getElementById('chat-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent the default form submission
 
-                const inputElement = document.getElementById('chat-input');
-                const message = inputElement.value;
-                inputElement.value = ''; // Clear the input after sending
+            const inputElement = document.getElementById('chat-input');
+            const message = inputElement.value;
+            inputElement.value = ''; // Clear the input after sending
 
-                // Append user message to chat history
-                const messageList = document.getElementById('message-list');
-                const userMessage = document.createElement('li');
-                userMessage.className = 'clearfix';
-                userMessage.innerHTML = `<div class="message-data text-right">
+            // Append user message to chat history
+            const messageList = document.getElementById('message-list');
+            const userMessage = document.createElement('li');
+            userMessage.className = 'clearfix';
+            userMessage.innerHTML = `<div class="message-data text-right">
                                  <span class="message-data-time">${new Date().toLocaleTimeString()}, Today</span>
                                  <img src="assets/img/person.png" alt="avatar">
                              </div>
                              <div class="message right-message float-right">${message}</div>`;
-                messageList.appendChild(userMessage);
+            messageList.appendChild(userMessage);
 
-                const messages = [];
+            const messages = [];
 
-                // Use querySelectorAll to find all child 'li' elements with class 'clearfix' which hold the messages
-                const messageItems = messageList.querySelectorAll('li.clearfix');
+            // Use querySelectorAll to find all child 'li' elements with class 'clearfix' which hold the messages
+            const messageItems = messageList.querySelectorAll('li.clearfix');
 
-                // Iterate over each message item and extract the text content of the message
-                messageItems.forEach(item => {
-                    // Finding the div with class 'message' that contains the actual message text
-                    const messageContent = item.querySelector('.message').textContent.trim();
-                    // Add the message text to the messages array
-                    messages.push(messageContent);
-                });
-
-                // Now messages array contains just the text content of each message
-                console.log(messages);
-
-                // Send message to server and handle response
-                fetch('http://localhost:8000/chat', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ prompt: messages })
-                }).then(response => response.text())
-                    .then(text => {
-                        // Append server's response to chat history
-                        const serverMessage = document.createElement('li');
-                        serverMessage.className = 'clearfix';
-                        serverMessage.innerHTML = `<div class="message left-message">${text}</div>`;
-                        messageList.appendChild(serverMessage);
-                    }).catch(error => console.error('Error:', error));
+            // Iterate over each message item and extract the text content of the message
+            messageItems.forEach(item => {
+                // Finding the div with class 'message' that contains the actual message text
+                const messageContent = item.querySelector('.message').textContent.trim();
+                // Add the message text to the messages array
+                messages.push(messageContent);
             });
-        </script>
+
+            // Now messages array contains just the text content of each message
+            console.log(messages);
+
+            // Send message to server and handle response
+            fetch('http://localhost:8000/chat', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: message })
+            }).then(response => response.text())
+                .then(text => {
+                    // Append server's response to chat history
+                    const serverMessage = document.createElement('li');
+                    serverMessage.className = 'clearfix';
+                    serverMessage.innerHTML = `<div class="message left-message">${text}</div>`;
+                    messageList.appendChild(serverMessage);
+                }).catch(error => console.error('Error:', error));
+        });
+    </script>
 </body>
 
 </html>
